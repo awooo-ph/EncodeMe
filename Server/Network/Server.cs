@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -32,16 +33,25 @@ namespace NORSU.EncodeMe.Network
             NetworkComms.AppendGlobalIncomingPacketHandler<EndPointInfo>(EndPointInfo.GetHeader(), HandShakeHandler);
             NetworkComms.AppendGlobalIncomingPacketHandler<GetWork>(GetWork.GetHeader(), GetWorkHandler);
             NetworkComms.AppendGlobalIncomingPacketHandler<Login>(Login.GetHeader(), LoginHandler);
+            NetworkComms.AppendGlobalIncomingPacketHandler<Logout>(Logout.GetHeader(),LogoutHandler);
             NetworkComms.AppendGlobalIncomingPacketHandler<SchedulesRequest>(SchedulesRequest.GetHeader(), AndroidHandler.ScheduleRequestHandler);
             NetworkComms.AppendGlobalIncomingPacketHandler<EnrollRequest>(EnrollRequest.GetHeader(),AndroidHandler.EnrollRequestHandler);
             NetworkComms.AppendGlobalIncomingPacketHandler<RegisterStudent>(RegisterStudent.GetHeader(), AndroidHandler.RegisterStudentHandler);
             NetworkComms.AppendGlobalIncomingPacketHandler<SaveWork>(SaveWork.GetHeader(),SaveWorkHandler);
-            
-            Connection.StartListening(ConnectionType.UDP, new IPEndPoint(IPAddress.Any, 0), true);
+            NetworkComms.AppendGlobalIncomingPacketHandler<GetCourses>(GetCourses.GetHeader(), AndroidHandler.GetCoursesHandler);
+            NetworkComms.AppendGlobalIncomingPacketHandler<GetCoursesDesktop>(GetCoursesDesktop.GetHeader(),GetCoursesHandler);
+            NetworkComms.AppendGlobalIncomingPacketHandler<Pong>(Pong.GetHeader(),PongHandler);
+            NetworkComms.AppendGlobalIncomingPacketHandler<EnrollStudent>(EnrollStudent.GetHeader(),EnrollStudentHandler);
+            NetworkComms.AppendGlobalIncomingPacketHandler<StartEnrollment>(StartEnrollment.GetHeader(),AndroidHandler.StartEnrollmentHandler);
+            NetworkComms.AppendGlobalIncomingPacketHandler<AddSchedule>(AddSchedule.GetHeader(),AndroidHandler.AddScheduleHandler);
+            NetworkComms.AppendGlobalIncomingPacketHandler<CommitEnrollment>(CommitEnrollment.GetHeader(),AndroidHandler.CommitEnrollmentHandler);
+            Connection.StartListening(ConnectionType.UDP, new IPEndPoint(IPAddress.Any, 7777), true);
         }
         
         public static void Stop()
         {
+            _started = false;
+            
             var list = Client.Cache.Where(x => x.IsOnline)?.ToList();
             foreach (var client in list)
             {
@@ -109,15 +119,16 @@ namespace NORSU.EncodeMe.Network
             return pong;
         }
 
-        public static Task SendEncoderUpdates()
+        public static Task SendEncoderUpdates(List<Client> clients)
         {
             return Task.Factory.StartNew(() =>
             {
                 var update = new ServerUpdate();
                 update.Requests = Request.Cache.Count(x => x.Status == Request.Statuses.Pending);
-                update.Encoders = Client.Cache.Count(x => x.IsOnline);
+                update.Encoders = clients.Count(x => x.IsOnline);
                 //Parallel.ForEach(Client.Cache, c => update.Send(new IPEndPoint(IPAddress.Parse(c.IP), c.Port)));
-                foreach (var c in Client.Cache) update.Send(new IPEndPoint(IPAddress.Parse(c.IP), c.Port));
+                
+                foreach (var c in clients) update.Send(new IPEndPoint(IPAddress.Parse(c.IP), c.Port));
             });
         }
     }

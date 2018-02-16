@@ -27,14 +27,18 @@ namespace NORSU.EncodeMe.Network
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private static object _headerLock = new object();
         public static string GetHeader()
         {
-            if (_headers.ContainsKey(typeof(T)))
-                return _headers[typeof(T)];
+            lock (_headerLock)
+            {
+                if (_headers.ContainsKey(typeof(T)))
+                    return _headers[typeof(T)];
             
-            var header = typeof(T).Name;
-            _headers.Add(typeof(T),header);
-            return header;
+                var header = typeof(T).Name;
+                _headers.Add(typeof(T),header);
+                return header;
+            }
         }
 
         public virtual Task Send(IPEndPoint ip)
@@ -53,11 +57,12 @@ namespace NORSU.EncodeMe.Network
                     sent = true;
                     break;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 #if __ANDROID__
                     await Task.Delay(100);
 #else
+                    
                     await TaskEx.Delay(100);
 #endif
                 }

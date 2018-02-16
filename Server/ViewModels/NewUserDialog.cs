@@ -4,6 +4,29 @@ namespace NORSU.EncodeMe.ViewModels
 {
     class NewUserDialog : ViewModelBase
     {
+        public NewUserDialog():this("NEW ENCODER") { }
+
+        public NewUserDialog(string title)
+        {
+            Title = title;
+        }
+
+        private string _Title;
+
+        public string Title
+        {
+            get => _Title;
+            set
+            {
+                if(value == _Title)
+                    return;
+                _Title = value;
+                OnPropertyChanged(nameof(Title));
+            }
+        }
+
+        
+
         private string _Username;
 
         public string Username

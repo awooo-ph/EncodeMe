@@ -10,19 +10,21 @@
              xmlns:properties="clr-namespace:NORSU.EncodeMe.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Grid.RowSpan="2">
+    <Grid Grid.RowSpan="2" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" SharedSizeGroup="a" />
+            <RowDefinition Height="Auto" SharedSizeGroup="a"/>
             <RowDefinition Height="*" />
+          <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <materialDesign:ColorZone Grid.Row="1"
+    <materialDesign:ColorZone Grid.Row="1"
                                   Mode="Dark"
                                   VerticalAlignment="Stretch">
-            <ListBox IsSynchronizedWithCurrentItem="True"
+      <ListBox IsSynchronizedWithCurrentItem="True"
                                  x:Name="DemoItemsListBox"
                                  Foreground="{StaticResource MaterialDesignDarkForeground}"
-                                 Margin="0 20 0 0"
+                                 Margin="0 0 0 0"
+               HorizontalContentAlignment="Stretch"
                                  ItemsSource="{Binding Path=Screens}">
                 <ListBox.ItemContainerStyle>
                     <Style BasedOn="{StaticResource MaterialDesignListBoxItem}"
@@ -33,8 +35,28 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="viewModels:Screen">
-                       
-                        <Grid Margin="7 0">
+
+            <Grid>
+              <materialDesign:Badged Badge="{Binding Badge}" BadgeColorZoneMode="Accent"
+                                     VerticalAlignment="Stretch"
+                                     HorizontalAlignment="Stretch"
+                                     HorizontalContentAlignment="Stretch"
+                                     ToolTip="{Binding Name}"
+                                     Visibility="{Binding Source={x:Static properties:Settings.Default},Path=SideBarOpen,Converter={converters:BooleanToVisibility}}"
+                                     Margin="7">
+
+                <StackPanel HorizontalAlignment="Center">
+                <materialDesign:PackIcon Kind="{Binding Icon}"
+                                         Width="32"
+                                         Height="32"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding ShortName}" FontSize="10pt" TextAlignment="Center"
+                             Opacity="0.7"/>
+                </StackPanel>
+              </materialDesign:Badged>
+              <Grid Margin="7 0"
+                  Visibility="{Binding Source={x:Static properties:Settings.Default},Path=SideBarOpen,Converter={converters:BooleanToVisibility Collapsed,Visible}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
                                 <ColumnDefinition Width="*" SharedSizeGroup="Label"/>
@@ -47,7 +69,6 @@
                                                      VerticalAlignment="Center" />
                             <TextBlock Text="{Binding Name}" Margin="32 0 32 0"
                                                    FontSize="11pt"
-                                                   Visibility="{Binding Source={x:Static properties:Settings.Default},Path=SideBarOpen,Converter={converters:BooleanToVisibility Collapsed,Visible}}"
                                                    VerticalAlignment="Center"
                                                    Grid.Column="1" />
                             <materialDesign:Badged Badge="{Binding Badge}" BadgeColorZoneMode="Accent"
@@ -55,35 +76,117 @@
                                                    Margin="4"
                                                    Grid.Column="2"/>
                         </Grid>
-                    </DataTemplate>
+            </Grid>
+          </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </materialDesign:ColorZone>
 
-        <materialDesign:ColorZone Padding="7"
+    <Grid Grid.Row="2" Background="{StaticResource MaterialDesignDarkBackground}">
+    <ListBoxItem Margin="0 0 0 0"
+                 HorizontalContentAlignment="Stretch"
+                 Foreground="{StaticResource MaterialDesignDarkForeground}">
+        <ListBoxItem.InputBindings>
+          <MouseBinding MouseAction="LeftClick" Command="{Binding LogoutCommand}"/>
+        </ListBoxItem.InputBindings>
+        <Grid Margin="0 10">
+          <StackPanel
+            Visibility="{Binding Source={x:Static properties:Settings.Default},Path=SideBarOpen,Converter={converters:BooleanToVisibility}}">
+            <materialDesign:PackIcon Kind="Logout"
+                                     Width="24"
+                                     Height="24"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center" />
+            <TextBlock Text="Logout"
+                       FontSize="10pt"
+                       Opacity="0.7"
+                       TextAlignment="Center"
+                       VerticalAlignment="Center"
+                       />
+          </StackPanel>
+    <Grid HorizontalAlignment="Left"
+          Margin="24 0 0 0"
+          Visibility="{Binding Source={x:Static properties:Settings.Default},Path=SideBarOpen,Converter={converters:BooleanToVisibility Collapsed,Visible}}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <materialDesign:PackIcon Kind="Logout"
+                               Width="24"
+                               Height="24"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+      <TextBlock Text="Logout" Margin="32 0 0 0"
+                 FontSize="11pt"
+                 VerticalAlignment="Center"
+                 Grid.Column="1" />
+    </Grid>
+      </Grid>
+    </ListBoxItem>
+      </Grid>
+
+    <materialDesign:ColorZone 
                                   materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                   x:Name="HeaderColorZone"
                               VerticalAlignment="Stretch"
                                             Mode="PrimaryDark">
-            <Grid Margin="7" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <materialDesign:PackIcon Kind="Server" Height="24"
+      <Grid>
+        <Grid Margin="10"
+          Height="48"
+          Width="48"
+          VerticalAlignment="Center"
+          HorizontalAlignment="Center"
+          Visibility="{Binding Source={x:Static properties:Settings.Default},Path=SideBarOpen,Converter={converters:BooleanToVisibility}}">
+          <Grid.OpacityMask>
+            <VisualBrush>
+              <VisualBrush.Visual>
+                <Rectangle Height="17" Width="17" Fill="Red" 
+                           RadiusY="1" RadiusX="1"/>
+              </VisualBrush.Visual>
+            </VisualBrush>
+          </Grid.OpacityMask>
+          <Image Source="{Binding CurrentUser.Picture,Converter={converters:BytesToImage}}"
+                 Stretch="UniformToFill"
+                 RenderOptions.BitmapScalingMode="HighQuality" />
+        </Grid>
+        
+        <Grid Margin="7" HorizontalAlignment="Center"
+            Visibility="{Binding Source={x:Static properties:Settings.Default},Path=SideBarOpen,Converter={converters:BooleanToVisibility Collapsed,Visible}}">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Height="48" Width="48"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+          <Grid.OpacityMask>
+            <VisualBrush>
+              <VisualBrush.Visual>
+                <Ellipse Height="7" Width="7" Fill="Red"/>
+              </VisualBrush.Visual>
+            </VisualBrush>
+          </Grid.OpacityMask>
+
+          <materialDesign:PackIcon Kind="Account" Height="24"
                                      Width="24"
+                                         Visibility="{Binding CurrentUser.HasPicture,Converter={converters:BooleanToVisibility Collapsed,Visible}}"
                                      Padding="0" Margin="0"
                                      VerticalAlignment="Center" />
-                <TextBlock Text="EncodeMe Server"
+          <Image Source="{Binding CurrentUser.Picture,Converter={converters:BytesToImage}}"
+                       Stretch="UniformToFill"
+                       RenderOptions.BitmapScalingMode="HighQuality"/>
+        </Grid>
+        <TextBlock Text="{Binding CurrentUser.UserName}"
                                        Grid.Column="1"
                                        FontSize="12pt"
-                                       Visibility="{Binding Source={x:Static properties:Settings.Default},Path=SideBarOpen,Converter={converters:BooleanToVisibility Collapsed,Visible}}"
                                    Margin="10 0 20 0"
                                        Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                                    VerticalAlignment="Center" />
-            </Grid>
-        </materialDesign:ColorZone>
-    </Grid>
+      </Grid>
+      </Grid>
+    </materialDesign:ColorZone>
+  </Grid>
 </UserControl>
 
 

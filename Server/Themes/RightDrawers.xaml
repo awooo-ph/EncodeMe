@@ -119,7 +119,9 @@
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
                     <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}"
                                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"/>
-                    <DataGridTemplateColumn Header="Prospectus" IsReadOnly="True">
+          <DataGridTextColumn Header="College" Binding="{Binding College}"
+                              EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+          <DataGridTemplateColumn Header="Prospectus" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource MaterialDesignToolButton}"

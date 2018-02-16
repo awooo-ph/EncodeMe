@@ -12,8 +12,9 @@ namespace NORSU.EncodeMe.ViewModels
 {
     class Subjects : Screen
     {
-        private Subjects() : base("Subjects", PackIconKind.BookOpen)
+        private Subjects() : base("Offered Courses", PackIconKind.BookOpen)
         {
+            ShortName = "Courses";
             Commands.Add(new ScreenMenu("COURSES", PackIconKind.Library, ShowCoursesCommand));
             
             HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
@@ -103,14 +104,14 @@ namespace NORSU.EncodeMe.ViewModels
                         Negative = "CANCEL",
                         AffirmativeAction = () =>
                         {
-                            Models.ClassSchedule.DeleteWhere(nameof(Models.ClassSchedule.SubjectCode), subject.Code);
+                            Models.ClassSchedule.DeleteWhere(nameof(Models.ClassSchedule.SubjectId), subject.Id);
                             IsDialogOpen = false;
                         }
                     }, "InnerDialog");
                 }, d =>
                 {
                     if (!(Items.CurrentItem is Models.Subject subject)) return false;
-                    return Models.ClassSchedule.Cache.Count(x=>x.SubjectCode==subject.Code) > 0;
+                    return Models.ClassSchedule.Cache.Count(x=>x.SubjectId==subject.Id) > 0;
                 }));
 
         private static ICommand _showCoursesCommand;
@@ -159,7 +160,7 @@ namespace NORSU.EncodeMe.ViewModels
                 _items.NewItemPlaceholderPosition = NewItemPlaceholderPosition.AtBeginning;
                 _items.CurrentChanged += (sender, args) =>
                 {
-                    Models.Subject.CurrentItem =  _items.CurrentItem as Models.Subject;
+                    Models.ClassSchedule.SetNewScheduleSubject(((Models.Subject) _items.CurrentItem).Id);
                     Schedules.Filter = FilterSchedule;
                 };
                 return _items;
@@ -190,7 +191,7 @@ namespace NORSU.EncodeMe.ViewModels
         {
             if (!(Items.CurrentItem is Models.Subject)) return false;
             var sched = (Models.ClassSchedule) o;
-            return sched.SubjectCode == ((Models.Subject) Items.CurrentItem)?.Code;
+            return sched.SubjectId == ((Models.Subject) Items.CurrentItem)?.Id;
         }
     }
 }

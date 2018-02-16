@@ -19,7 +19,7 @@ namespace NORSU.EncodeMe
             
             Client.Start();
 
-            var stud = (await Db.GetAll<Student>()).FirstOrDefault();
+            Student stud = null;// (await Db.GetAll<Student>()).FirstOrDefault();
             if (stud == null)
                 StartActivity(new Intent(Application.Context, typeof(StudentIntroActivity)));
             else

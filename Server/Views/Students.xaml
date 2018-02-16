@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="NORSU.EncodeMe.Views.Students"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NORSU.EncodeMe.Views"
+             mc:Ignorable="d" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:NORSU.EncodeMe.Converters"
+             xmlns:models="clr-namespace:NORSU.EncodeMe.Models;assembly=NORSU.EncodeMe.Data"
+             xmlns:encodeMe="clr-namespace:NORSU.EncodeMe"
+             xmlns:viewModels="clr-namespace:NORSU.EncodeMe.ViewModels"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+    <DataGrid ItemsSource="{Binding Items}"
+                          CanUserAddRows="True"
+                          SelectionMode="Single"
+                      AutoGenerateColumns="False"
+                          FrozenColumnCount="1"
+              GotFocus="Grid_GotFocus"
+                      CanUserDeleteRows="False">
+
+      <DataGrid.Columns>
+        <DataGridTemplateColumn IsReadOnly="True">
+          <DataGridTemplateColumn.Header>
+            <CheckBox IsThreeState="True" IsChecked="{Binding Source={x:Static viewModels:Students.Instance},Path=CheckState}"
+                      HorizontalAlignment="Center"
+                      Margin="4 0 0 0"/>
+          </DataGridTemplateColumn.Header>
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid>
+                <CheckBox IsChecked="{Binding IsSelected,UpdateSourceTrigger=PropertyChanged}"
+                          Visibility="{Binding (Validation.HasError), Converter={converters:BooleanToVisibility Collapsed,Visible}, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}"
+                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <md:PackIcon Kind="Alert" Foreground="{StaticResource ValidationErrorBrush}" VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             ToolTip="This item contains invalid data."
+                             Visibility="{Binding (Validation.HasError), Converter={converters:BooleanToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" />
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn Header="ID" Binding="{Binding StudentId,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True}"
+                            MinWidth="111"
+                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+        <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}"
+                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+        <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}"
+                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+        <DataGridTemplateColumn Header="Birth Date" SortMemberPath="BirthDate">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding BirthDate,StringFormat=g}" TextAlignment="Center"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate>
+              <DatePicker SelectedDate="{Binding BirthDate}"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+        <DataGridComboBoxColumn ItemsSource="{encodeMe:EnumBinding EnumType={x:Type models:Sexes}}"
+                                SelectedItemBinding="{Binding Sex}"
+                                Header="Gender"
+                                EditingElementStyle="{StaticResource MaterialDesignDataGridComboBox}"
+                                ElementStyle="{StaticResource MaterialDesignDataGridComboBox}"/>
+        <DataGridTextColumn Header="Address" Binding="{Binding Address}"
+                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+        <DataGridComboBoxColumn ItemsSource="{Binding Source={x:Static models:Course.Cache}}"
+                                DisplayMemberPath="Acronym"
+                                SelectedValuePath="Id"
+                                SelectedValueBinding="{Binding CourseId}"
+                                Header="Course"
+                                EditingElementStyle="{StaticResource MaterialDesignDataGridComboBox}"
+                                ElementStyle="{StaticResource MaterialDesignDataGridComboBox}" />
+        <DataGridTextColumn Header="Major" Binding="{Binding Major}"
+                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+        <DataGridTextColumn Header="Minor" Binding="{Binding Minor}"
+                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+        <DataGridTextColumn Header="Scholarship" Binding="{Binding Scholarship}"
+                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+      </DataGrid.Columns>
+
+    </DataGrid>
+      
+      <Button VerticalAlignment="Bottom" HorizontalAlignment="Left"
+              Margin="10" Content="DELETE SELECTED"
+              Command="{Binding DeleteSelectedCommand}"/>
+
+    <md:ColorZone Margin="10"
+                  BorderBrush="{StaticResource MaterialDesignDivider}"
+                  BorderThickness="1"
+                  CornerRadius="7"
+                  MouseLeave="Search_MouseLeave"
+                  MouseEnter="Search_MouseEnter"
+                  VerticalAlignment="Top" HorizontalAlignment="Right">
+      <StackPanel>
+      <StackPanel Orientation="Horizontal">
+      <TextBox Text="{Binding SearchKeyword,UpdateSourceTrigger=PropertyChanged}"
+               x:Name="SearchBox"
+               md:HintAssist.Hint="SEARCH" Margin="7"
+               Width="222" />
+        <Button Content="{md:PackIcon Filter}" Style="{StaticResource MaterialDesignToolButton}"
+                Command="{Binding ToggleAdvanceFilterCommand}"
+                Padding="10"
+                ToolTip="Toggle Advance Filter"/>
+      </StackPanel>
+        <StackPanel Visibility="{Binding EnableAdvanceFilter,Converter={converters:BooleanToVisibility}}"
+                    Margin="10">
+          <CheckBox IsChecked="{Binding FilterByCourse}" Content="COURSE:"/>
+          <ComboBox ItemsSource="{Binding Source={x:Static models:Course.Cache}}" DisplayMemberPath="Acronym"
+                    IsEnabled="{Binding FilterByCourse}"
+                    md:HintAssist.Hint="Select Course"
+                    SelectedItem="{Binding CourseFilter}"/>
+          
+        </StackPanel>
+      </StackPanel>
+    </md:ColorZone>
+  </Grid>
+</UserControl>

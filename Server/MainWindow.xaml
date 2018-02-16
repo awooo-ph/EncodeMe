@@ -19,7 +19,7 @@
         xmlns:views="clr-namespace:NORSU.EncodeMe.Views"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        MinWidth="555" MinHeight="471"
+        MinWidth="666" MinHeight="555"
         WindowState="Maximized"
         DataContext="{Binding Source={x:Static viewModels:MainViewModel.Instance}}"
         Title="EncodeMe Server" Height="471" Width="555">
@@ -53,6 +53,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <views:SideBar Grid.RowSpan="2"/>
+              
             <md:DialogHost Identifier="InnerDialog"
                            SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}"
                            IsOpen="{Binding Screens/IsDialogOpen}"
@@ -90,19 +91,34 @@
                                             Grid.Row="1"/>
                         </Grid>
                     </md:DrawerHost.RightDrawerContent>
-                    <Grid>
+                    <Grid IsEnabled="{Binding HasLoggedIn}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" SharedSizeGroup="a" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
+                      <!--Screen Content-->
                         <ScrollViewer Grid.Row="1"
                                   HorizontalScrollBarVisibility="{Binding Screens/HorizontalScrollBarVisibility}"
                                   VerticalScrollBarVisibility="{Binding Screens/VerticalScrollBarVisibility}">
                             <md:Transitioner
                             ItemsSource="{Binding Screens}"
                             IsSynchronizedWithCurrentItem="True">
+                <md:Transitioner.ItemContainerStyle>
+                  <Style TargetType="md:TransitionerSlide">
+                    <Setter Property="BackwardWipe">
+                      <Setter.Value>
+                        <md:FadeWipe/>
+                      </Setter.Value>
+                    </Setter>
+                    <Setter Property="ForwardWipe">
+                      <Setter.Value>
+                        <md:FadeWipe />
+                      </Setter.Value>
+                    </Setter>
+                  </Style>
+                </md:Transitioner.ItemContainerStyle>
                                 <md:Transitioner.Resources>
                                     <DataTemplate DataType="{x:Type viewModels:Encoders}">
                                         <views:Encoders DataContext="{Binding}" />
@@ -116,11 +132,18 @@
                                     <DataTemplate DataType="{x:Type viewModels:Requests}">
                                         <views:Requests DataContext="{Binding}" />
                                     </DataTemplate>
+                  <DataTemplate DataType="{x:Type viewModels:Students}">
+                    <views:Students />
+                  </DataTemplate>
+                  <DataTemplate DataType="{x:Type viewModels:Users}">
+                    <views:Users/>
+                  </DataTemplate>
                                 </md:Transitioner.Resources>
                             </md:Transitioner>
                         </ScrollViewer>
 
-                        <md:ColorZone md:ShadowAssist.ShadowDepth="Depth1"
+            <!--Screen Title-->
+            <md:ColorZone md:ShadowAssist.ShadowDepth="Depth1"
                                       Background="{DynamicResource MaterialDesignPaper}"
                                   Grid.Row="0"
                                   md:ShadowAssist.Darken="False"
@@ -162,10 +185,14 @@
                                         </DataTemplate>
                                     </md:Transitioner.ItemTemplate>
                                 </md:Transitioner>
+
+                <!--Screen Toolbar-->
+                <StackPanel Orientation="Horizontal"
+                            Grid.Column="2"
+                            HorizontalAlignment="Right">
+                 
                                 
-                                <md:Transitioner Grid.Column="2"
-                                         HorizontalAlignment="Right"
-                                         Margin="10 0"
+                  <md:Transitioner Margin="10 0"
                                          ItemsSource="{Binding Screens}"
                                          IsSynchronizedWithCurrentItem="True">
                                     <md:Transitioner.ItemTemplate>
@@ -196,7 +223,11 @@
                                         </DataTemplate>
                                     </md:Transitioner.ItemTemplate>
                                 </md:Transitioner>
-                            </Grid>
+
+                 
+                </StackPanel>
+                              
+              </Grid>
                         </md:ColorZone>
                     </Grid>
                 </md:DrawerHost>
@@ -210,6 +241,9 @@
                              Grid.Row="1"
                              Grid.ColumnSpan="2">
                 </md:Snackbar>
+              
+              <views:Login Grid.ColumnSpan="2" Grid.RowSpan="2"
+                           Visibility="{Binding HasLoggedIn,Converter={cnv:BooleanToVisibility Collapsed,Visible},FallbackValue=Visible}"/>
             </Grid>
 
     </md:DialogHost>

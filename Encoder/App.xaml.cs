@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Threading;
 using System.Windows;
 using NORSU.EncodeMe.Network;
+using NORSU.EncodeMe.ViewModels;
 
 namespace NORSU.EncodeMe
 {
@@ -15,6 +17,7 @@ namespace NORSU.EncodeMe
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            awooo.Context = SynchronizationContext.Current;
             Client.Start();
         }
 

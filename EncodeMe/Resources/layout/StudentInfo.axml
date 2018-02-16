@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+  <ImageView
+      android:layout_alignParentBottom="true"
+      android:layout_alignParentRight="true"
+      android:src="@drawable/norsu"
+      android:layout_width="match_parent"
+      android:scaleType="fitEnd"
+    android:layout_marginLeft="111dp"
+    android:layout_marginRight="-111dp"
+    android:layout_marginBottom="-111dp"
+      android:layout_height="444dp" />
+  <LinearLayout
+      android:background="#EEFFFFFF"
+      android:layout_width="match_parent"
+      android:orientation="vertical"
+      android:layout_height="match_parent">
+    <ScrollView
+        android:scrollbars="vertical"
+        android:layout_weight="7"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+      <LinearLayout
+          android:orientation="vertical"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop ="20dp"
+          android:layout_marginLeft="20dp"
+          android:layout_marginRight="20dp"
+          android:layout_marginBottom="47dp">
+
+        <TextView
+            android:text="FIRST NAME LAST NAME"
+            android:id="@+id/Fullname"
+            android:textSize="15pt"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+          <ImageView
+              android:id="@+id/Picture"
+              android:layout_marginRight="20dp"
+              android:adjustViewBounds="true"
+              android:scaleType="fitCenter"
+              android:layout_width="147dp"
+              android:layout_height="match_parent" />
+          <LinearLayout
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+            <TextView
+                android:text="ID: 23423-23423"
+                android:textSize="9pt"
+                android:id="@+id/StudentId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginTop="4dp"
+                android:text="DATE OF BIRTH"
+                style="@style/Base.TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/BirthDate"
+                android:text="APRIL 13, 1989"
+                style="@style/TextAppearance.AppCompat.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginTop="4dp"
+                android:text="GENDER"
+                style="@style/Base.TextAppearance.AppCompat.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="FEMALE"
+                android:id="@+id/Gender"
+                style="@style/TextAppearance.AppCompat.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+          </LinearLayout>
+        </LinearLayout>
+
+
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:text="ADDRESS"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="ADDRESS"
+            android:id="@+id/Address"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:text="SCHOLARSHIP"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="SCHOLARSHIP"
+            android:id="@+id/Scholarship"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:text="COURSE"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="COURSE"
+            android:id="@+id/Course"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:text="MAJOR"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="MAJOR"
+            android:id="@+id/Major"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:text="MINOR"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="MINOR"
+            android:id="@+id/Minor"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text=" "
+            android:layout_marginTop="40dp"
+            style="@style/TextAppearance.AppCompat.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+      </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+      <Button
+          android:text="ENROLL"
+          android:id="@+id/EnrollButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="10dp" />
+
+    </LinearLayout>
+
+  </LinearLayout>
+</RelativeLayout>

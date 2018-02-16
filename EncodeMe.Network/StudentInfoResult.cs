@@ -1,5 +1,4 @@
 ﻿using System;
-using NORSU.EncodeMe.Annotations;
 using ProtoBuf;
 
 namespace NORSU.EncodeMe.Network
@@ -32,7 +31,7 @@ namespace NORSU.EncodeMe.Network
             Result = result;
         }
         
-        public StudentInfoResult([NotNull] Student student) : this()
+        public StudentInfoResult(Student student) : this()
         {
             Student = student;
             Result = ResultCodes.Success;

@@ -36,12 +36,12 @@ namespace NORSU.EncodeMe
             _progress = FindViewById<ProgressBar>(Resource.Id.Progress);
 
             _progress.Visibility = ViewStates.Gone;
-            
-            _schedules = await Db.GetAll<ClassSchedule>();
-            _submitButton.Enabled = _schedules.Any(d=>!d.Sent);
-            _subjectsView.Adapter = new SubjectsAdapter(this,_schedules);
 
-            _student = (await Db.GetAll<Student>()).FirstOrDefault();
+            //_schedules = Client.ClassSchedules;// await Db.GetAll<ClassSchedule>();
+            _submitButton.Enabled = !Client.EnrollmentCommited;
+            _subjectsView.Adapter = new SubjectsAdapter(this, Client.ClassSchedules);
+
+            _student = Client.CurrentStudent;
             if (_student == null)
             {
                 StartActivity(typeof(StudentIntroActivity));
@@ -74,7 +74,7 @@ namespace NORSU.EncodeMe
             _addButton.Enabled = false;
             _progress.Visibility = ViewStates.Visible;
             
-            var result = await Client.Enroll(_student.StudentId, _schedules.Where(x=>!x.Sent).ToList());
+            var result = await Client.CommitEnrollment();
             
             edit = _pref.Edit();
             edit.PutBoolean("Subjects_Processing", true);
@@ -84,84 +84,36 @@ namespace NORSU.EncodeMe
             _addButton.Enabled = true;
             _submitButton.Enabled = true;
             _progress.Visibility = ViewStates.Gone;
-
-            if (result == null) return;
-
-
-            var dlg = new AlertDialog.Builder(this);
-            if (result.Result == ResultCodes.Success || result.Result == ResultCodes.Processing)
+            
+            if (result?.Success ?? false)
             {
-                foreach (var sched in _schedules)
-                {
-                    sched.Sent = true;
-                    await Db.Save(sched);
-                }
-
-                    edit = _pref.Edit();
-                edit.PutInt("QueueNumber", result.Result == ResultCodes.Processing ? -1 : result.QueueNumber);
-                edit.Commit();
-
-                if (result.Result == ResultCodes.Processing)
-                {
-                    dlg.SetMessage(
-                        "An encoder is currently processing your enrollment. Changes you've submitted were not accepted.");
-                    dlg.SetPositiveButton("OK", (o, a) => { });
-                    dlg.Show();
-                } else if (result.Result == ResultCodes.Enrolled)
-                {
-                    dlg.SetMessage(
-                        "You are officially enrolled. See the registrar to change your schedules.");
-                    dlg.SetTitle("Congratulations");
-                    dlg.SetPositiveButton("OK", (o, a) => { });
-                    dlg.Show();
-                }
-                
                 StartActivity(typeof(StatusActivity));
                 Finish();
-                return;
             }
-
-
-            
-            if (result.Result == ResultCodes.Offline)
-                dlg.SetMessage("Server is unavailable.");
-            else if (result.Result == ResultCodes.Timeout)
-                dlg.SetMessage("Request timeout");
             else
-                dlg.SetMessage("Request failed.");
+            {
+                var dlg = new AlertDialog.Builder(this);
+                dlg.SetMessage(result?.ErrorMessage??"Request timeout");
+                dlg.SetPositiveButton("OK", (o, a) => { });
+                dlg.Show();
+            }
             
-            dlg.SetPositiveButton("OK", (o, args) => { });
-            dlg.Show();
         }
 
         protected override async void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
             if (requestCode != 7 || resultCode != Result.Ok) return;
-
-            var id = data.GetLongExtra("id", 0);
-            if (id == 0) return;
-            var scheds = await Db.GetAll<ClassSchedule>("cache.db");
-            var sched = scheds.FirstOrDefault(d => d.ClassId == id);
-            if (sched == null) return;
-            AddSchedule(sched);
-        }
-
-        private List<ClassSchedule> _schedules = new List<ClassSchedule>();
-
-        private void AddSchedule(ClassSchedule schedule)
-        {
-            Db.Save(schedule);
-            _schedules.Add(schedule);
-            _subjectsView.Adapter = new SubjectsAdapter(this, _schedules);
+            
+            _subjectsView.Adapter = new SubjectsAdapter(this, Client.ClassSchedules);
             _submitButton.Enabled = true;
         }
-
+        
         protected override void OnRestoreInstanceState(Bundle savedInstanceState)
         {
             base.OnRestoreInstanceState(savedInstanceState);
 
             //_schedules = await Db.GetAll<ClassSchedule>();
-            _subjectsView.Adapter = new SubjectsAdapter(this, _schedules);
+            _subjectsView.Adapter = new SubjectsAdapter(this, Client.ClassSchedules);
         }
     }
     

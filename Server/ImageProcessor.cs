@@ -3,6 +3,11 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows;
 
 namespace NORSU.EncodeMe
 {
@@ -44,5 +49,37 @@ namespace NORSU.EncodeMe
             grPhoto.Dispose();
             return bmPhoto;
         }
-    }
+        
+        [DllImport("shell32.dll", EntryPoint = "#261",
+            CharSet = CharSet.Unicode, PreserveSig = false)]
+        public static extern void GetUserTilePath(
+            string username,
+            UInt32 whatever, // 0x80000000
+            StringBuilder picpath, int maxLength);
+
+        public static byte[] GetRandomLego()
+        {
+            var rnd = new Random();
+            var info = Application.GetResourceStream(new Uri($"pack://application:,,,/Lego/{rnd.Next(1, 9)}.jpg"));
+            if (info == null) return null;
+            using (var mem = new MemoryStream())
+            {
+                info.Stream.CopyTo(mem);
+                return mem.ToArray();
+            }
+        }
+
+        public static string GetUserTilePath(string username)
+        {
+            // username: use null for current user
+            var sb = new StringBuilder(1000);
+            GetUserTilePath(username, 0x80000000, sb, sb.Capacity);
+            return sb.ToString();
+        }
+
+        public static byte[] GetUserTile(string username)
+        {
+            return File.ReadAllBytes(GetUserTilePath(username));
+        }
+}
 }

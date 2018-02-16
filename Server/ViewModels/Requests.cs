@@ -13,6 +13,7 @@ namespace NORSU.EncodeMe.ViewModels
     {
         private Requests() : base("Enrollment Requests", PackIconKind.Bell)
         {
+            ShortName = "Requests";
         }
 
         private static Requests _instance;

@@ -15,7 +15,7 @@ namespace NORSU.EncodeMe
         private ProgressBar _progressBar;
         private EditText _firstname;
         private EditText _lastname;
-        private EditText _course;
+        private Spinner _course;
         private Button _nextButton;
         private string StudentId;
 
@@ -36,10 +36,19 @@ namespace NORSU.EncodeMe
             _progressBar = FindViewById<ProgressBar>(Resource.Id.Progress);
             _firstname = FindViewById<EditText>(Resource.Id.FirstName);
             _lastname = FindViewById<EditText>(Resource.Id.LastName);
-            _course = FindViewById<EditText>(Resource.Id.Course);
+            _course = FindViewById<Spinner>(Resource.Id.Course);
             _nextButton = FindViewById<Button>(Resource.Id.NextButton);
             
             _nextButton.Click += NextButtonOnClick;
+            
+            GetCourses();
+        }
+
+        private async void GetCourses()
+        {
+            var courses = await Client.GetCourses();
+            var adapter = new CoursesAdapter(this,courses.Items);
+            _course.Adapter = adapter;
         }
 
         private async void NextButtonOnClick(object sender, EventArgs eventArgs)
@@ -49,7 +58,7 @@ namespace NORSU.EncodeMe
                 StudentId = StudentId,
                 FirstName = _firstname.Text,
                 LastName = _lastname.Text,
-                Course = _course.Text
+               // Course = _course.Text
             };
 
             _progressBar.Indeterminate = true;
@@ -89,7 +98,7 @@ namespace NORSU.EncodeMe
         {
             outState.PutString(FIRST_NAME, _firstname.Text);
             outState.PutString(LAST_NAME,_lastname.Text);
-            outState.PutString(COURSE,_course.Text);
+          //  outState.PutString(COURSE,_course.Text);
             outState.PutBoolean(PROCESSING,_progressBar.Indeterminate);
             base.OnSaveInstanceState(outState);
         }
@@ -98,7 +107,7 @@ namespace NORSU.EncodeMe
         {
             _firstname.Text = savedInstanceState.GetString(FIRST_NAME, "");
             _lastname.Text = savedInstanceState.GetString(LAST_NAME, "");
-            _course.Text = savedInstanceState.GetString(COURSE, "");
+         //   _course.Text = savedInstanceState.GetString(COURSE, "");
             var proc = savedInstanceState.GetBoolean(PROCESSING, false);
             _progressBar.Indeterminate = proc;
             _firstname.Enabled = !proc;

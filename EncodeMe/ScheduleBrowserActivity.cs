@@ -96,7 +96,7 @@ namespace NORSU.EncodeMe
             base.OnSaveInstanceState(outState);
         }
 
-        private void SchedulesListViewOnItemClick(object sender, AdapterView.ItemClickEventArgs e)
+        private async void SchedulesListViewOnItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             var adapter = _schedulesListView.Adapter as SchedulesAdapter;
             if (adapter == null) return;
@@ -104,9 +104,27 @@ namespace NORSU.EncodeMe
             
             var resultIntent = new Intent();
             resultIntent.PutExtra("id", sched.ClassId);
-            SetResult(Result.Ok, resultIntent);
 
-            Finish();
+            var res = await Client.AddSchedule(sched);
+            if (res?.Success ?? false)
+            {
+                Client.ClassSchedules.Add(sched);
+                SetResult(Result.Ok, resultIntent);
+                Finish();
+            }
+            else
+            {
+                var dlg = new AlertDialog.Builder(this);
+                dlg.SetTitle(res == null ? "Can not find server" : res.ErrorMessage);
+                dlg.SetPositiveButton("Okay", (o, args) =>
+                {
+
+                });
+
+                dlg.Show();
+            }
+            
+            
         }
     }
 }

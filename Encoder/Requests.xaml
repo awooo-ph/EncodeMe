@@ -17,7 +17,8 @@
         ShowInTaskbar="False"
         SizeToContent="WidthAndHeight"
         xmlns:vm="clr-namespace:NORSU.EncodeMe.ViewModels"
-        xmlns:converters="clr-namespace:NORSU.EncodeMe.Converters">
+        xmlns:converters="clr-namespace:NORSU.EncodeMe.Converters"
+        xmlns:system="clr-namespace:System;assembly=mscorlib">
     <Window.Resources>
         <Storyboard x:Key="HideButton">
             <DoubleAnimation Storyboard.TargetName="Button" Storyboard.TargetProperty="Height"
@@ -33,9 +34,7 @@
         </Storyboard>
     </Window.Resources>
 
-
-    <Grid Height="400"
-              Width="250">
+    <Grid Width="333">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -48,7 +47,7 @@
                        HorizontalAlignment="Right"
                        Margin="0 0 20 20"/>
 
-        <md:ColorZone Mode="Light"
+        <md:ColorZone Mode="Light" CornerRadius="0 0 7 7"
                       Grid.Row="1">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -56,46 +55,56 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid MouseLeftButtonUp="EncoderPictureClicked"
-                      Background="Transparent"
-                      Cursor="Hand"
-                      Margin="10 0 0 0"
-                      x:Name="LoginLamp">
-
-                    <md:PackIcon Kind="AccountCircle" Height="32" Width="32"
-                                 VerticalAlignment="Center" />
-                    <Border Height="32" Width="32"
-                            CornerRadius="147"
-                            ClipToBounds="True">
-                        <Border.OpacityMask>
-                            <VisualBrush>
-                                <VisualBrush.Visual>
-                                    <Ellipse Height="7" Width="7" Fill="Red" />
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                        </Border.OpacityMask>
-                        <Image Source="{Binding Encoder.Picture,Converter={converters:BytesToImage}}"
-                               Stretch="UniformToFill"
-                               VerticalAlignment="Center"
-                               Height="32" Width="32" />
-                    </Border>
-                </Grid>
-
-                <md:Transitioner x:Name="MainTransitioner" SelectedIndex="0"
+        <md:Transitioner x:Name="MainTransitioner" SelectedIndex="1"
                                  Grid.Column="1">
-                    <Grid >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+          <md:Transitioner.ItemContainerStyle>
+            <Style TargetType="{x:Type md:TransitionerSlide}">
+              <Setter Property="BackwardWipe">
+                <Setter.Value>
+                  <md:SlideOutWipe />
+                </Setter.Value>
+              </Setter>
+              <Setter Property="ForwardWipe">
+                <Setter.Value>
+                  <md:SlideOutWipe />
+                </Setter.Value>
+              </Setter>
+            </Style>
+          </md:Transitioner.ItemContainerStyle>
+          <!-- Main Menu -->
+          <Grid >
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                        <StackPanel Orientation="Horizontal"
-                                    VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Encoder.Username}"
-                                       Style="{StaticResource MaterialDesignTitleTextBlock}"/>
-                        </StackPanel>
+            <Grid MouseLeftButtonUp="EncoderPictureClicked"
+                  Background="Transparent"
+                  Cursor="Hand"
+                  Margin="10 0 0 0"
+                  x:Name="LoginLamp">
 
-                        <StackPanel Orientation="Horizontal"
+              <md:PackIcon Kind="AccountCircle" Height="32" Width="32"
+                           VerticalAlignment="Center" />
+              <Border Height="32" Width="32"
+                      CornerRadius="147"
+                      ClipToBounds="True">
+                <Border.OpacityMask>
+                  <VisualBrush>
+                    <VisualBrush.Visual>
+                      <Ellipse Height="7" Width="7" Fill="Red" />
+                    </VisualBrush.Visual>
+                  </VisualBrush>
+                </Border.OpacityMask>
+                <Image Source="{Binding Encoder.Picture,Converter={converters:BytesToImage}}"
+                       Stretch="UniformToFill"
+                       VerticalAlignment="Center"
+                       Height="32" Width="32" />
+              </Border>
+            </Grid>
+
+            <!-- MINI STATS -->
+            <!--<StackPanel Orientation="Horizontal"
                                 Margin="0 0 20 0"
                                     Visibility="Collapsed"
                             HorizontalAlignment="Right"
@@ -125,226 +134,311 @@
                             </Button>
 
 
-                        </StackPanel>
+                        </StackPanel>-->
 
-                        <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Grid.Column="1">
+              <Button Style="{StaticResource MaterialDesignFlatButton}"
+                      ToolTip="Register New Student"
+                      Padding="4 2">
+                <md:PackIcon Kind="AccountPlus" Height="24" Width="24"/>
+              </Button>
+              <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                                 Click="Button_OnClick"
-                                Margin="5"
-                                x:Name="NextButton"
-                                Grid.Column="1">
-                            <md:PackIcon Kind="FileImport" Height="24" Width="24"/>
-                        </Button>
-                    </Grid>
-                    <!--Login toolbar-->
-                    <UniformGrid Columns="1" HorizontalAlignment="Right"
-                                 Grid.Column="1">
-                        <!--<Button Content="CANCEL"
-                                Click="ExitClicked"
-                                VerticalAlignment="Bottom"
-                                Margin="10 10 5 10" 
-                                />-->
+                                Margin="5">
+                <Path Data="M15.45202,0.29899979L20.934988,0.29899979 23.327017,2.8909988 29.209032,9.1710014 31.601,11.763 31.601,28.709999C31.601,30.504997,30.106005,32,28.312,32L9.6700403,32C7.8760344,32,6.3800021,30.504997,6.3800021,28.709999L6.3800021,24.223999 8.9720422,20.735001 8.9720422,28.611C8.9720422,29.009003,9.2709924,29.307999,9.6700403,29.307999L28.312,29.307999C28.710987,29.307999,29.009998,29.009003,29.009998,28.611L29.009998,12.361 24.025015,12.361C19.739006,12.66,19.639031,8.8720016,19.639031,8.8720016L19.639031,2.9910011 15.351983,2.9910011C15.45202,2.7910004,15.45202,2.4920006,15.45202,2.2929993L15.45202,0.89699936z M9.6700403,0L9.7700149,0 12.56103,0C13.059015,0,13.558039,0.39899826,13.558039,0.89699936L13.558039,2.2929993C13.558039,2.7910004,13.158991,3.1899986,12.56103,3.1899986L10.666988,3.1899986C9.8690139,3.1899986 8.3740197,3.5890007 7.9750329,5.980999 7.5770232,8.0750008 7.9750329,14.454998 7.9750329,14.454998L11.364986,14.454998 5.7820407,21.533001 0,14.454998 3.5889877,14.454998 3.7880229,5.980999C3.7880231,5.980999,3.4890121,0.79700089,9.6700403,0z"
+                                  Stretch="Uniform" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" Width="20" Height="20" Margin="0,0,0,0"
+                                  RenderTransformOrigin="0.5,0.5">
+                  <Path.RenderTransform>
+                    <TransformGroup>
+                      <TransformGroup.Children>
+                        <RotateTransform Angle="0" />
+                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                      </TransformGroup.Children>
+                    </TransformGroup>
+                  </Path.RenderTransform>
+                </Path>
+              </Button>
+            </StackPanel>
+          </Grid>
 
-                        <Button Content="LOGIN"
-                                IsEnabled="False"
+          <!--Login toolbar-->
+          <UniformGrid Columns="1" HorizontalAlignment="Right"
+                                 Grid.Column="1">
+            
+            <Button Content="LOGIN"
+                    IsEnabled="False"
                                 x:Name="LoginButton"
                                 Click="LoginClicked"
                                 VerticalAlignment="Bottom"
                                 Margin="5 10 10 10" />
-                    </UniformGrid>
-                    <!--Encoder Toolbar-->
-                    <Grid>
-                        <Button x:Name="LogoutButton"
-                            HorizontalAlignment="Right"
+          </UniformGrid>
+
+          <!--Encoder Toolbar-->
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+             
+            <Button x:Name="LogoutButton"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                            HorizontalAlignment="Left"
                             Click="LogoutButton_OnClick"
-                                Grid.Column="1"
-                                ToolTip="Logout"
-                                IsEnabled="False"
-                                VerticalAlignment="Bottom"
-                                Margin="10" >
-                            <StackPanel Orientation="Horizontal">
-                                <md:PackIcon Kind="Logout"
-                                         Height="24"
-                                         Width="24"
-                                         VerticalAlignment="Center"/>
-                                <TextBlock Text=" LOGOUT"
+                    Height="Auto"
+                    VerticalAlignment="Stretch">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="LOGOUT"
                                        VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                    </Grid>
+              </StackPanel>
+            </Button>
+              <Button Style="{StaticResource MaterialDesignFlatButton}"
+                      Click="Enroll_Click"
+                      Height="Auto"
+                      VerticalAlignment="Stretch"
+                      Content="ENROLL" />
+            </StackPanel>
+            
+              <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    Grid.Column="1"
+                                Click="Button_OnClick"
+                    HorizontalAlignment="Right"
+                      Height="32" Width="32"
+                                Margin="7">
+                <Path Data="M15.45202,0.29899979L20.934988,0.29899979 23.327017,2.8909988 29.209032,9.1710014 31.601,11.763 31.601,28.709999C31.601,30.504997,30.106005,32,28.312,32L9.6700403,32C7.8760344,32,6.3800021,30.504997,6.3800021,28.709999L6.3800021,24.223999 8.9720422,20.735001 8.9720422,28.611C8.9720422,29.009003,9.2709924,29.307999,9.6700403,29.307999L28.312,29.307999C28.710987,29.307999,29.009998,29.009003,29.009998,28.611L29.009998,12.361 24.025015,12.361C19.739006,12.66,19.639031,8.8720016,19.639031,8.8720016L19.639031,2.9910011 15.351983,2.9910011C15.45202,2.7910004,15.45202,2.4920006,15.45202,2.2929993L15.45202,0.89699936z M9.6700403,0L9.7700149,0 12.56103,0C13.059015,0,13.558039,0.39899826,13.558039,0.89699936L13.558039,2.2929993C13.558039,2.7910004,13.158991,3.1899986,12.56103,3.1899986L10.666988,3.1899986C9.8690139,3.1899986 8.3740197,3.5890007 7.9750329,5.980999 7.5770232,8.0750008 7.9750329,14.454998 7.9750329,14.454998L11.364986,14.454998 5.7820407,21.533001 0,14.454998 3.5889877,14.454998 3.7880229,5.980999C3.7880231,5.980999,3.4890121,0.79700089,9.6700403,0z"
+                                  Stretch="Uniform" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" Width="16" Height="16" Margin="0,0,0,0"
+                                  RenderTransformOrigin="0.5,0.5">
+                  <Path.RenderTransform>
+                    <TransformGroup>
+                      <TransformGroup.Children>
+                        <RotateTransform Angle="0" />
+                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                      </TransformGroup.Children>
+                    </TransformGroup>
+                  </Path.RenderTransform>
+                </Path>
+              </Button>
+          </Grid>
 
-                    <!--Work toolbar-->
+          <!--Work toolbar-->
+          <Grid Margin="10 0" x:Name="WorkToolbar">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-                    <Grid Margin="10 0" x:Name="WorkToolbar">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Orientation="Horizontal"
+            <StackPanel Orientation="Horizontal"
                                     VerticalAlignment="Center">
-                            <Button Style="{StaticResource MaterialDesignToolButton}"
+              <Button Style="{StaticResource MaterialDesignToolButton}"
                                     Click="AcceptSelected"
                                     Padding="5 0">
-                                <StackPanel VerticalAlignment="Center">
-                                    <md:PackIcon Kind="CheckCircle"
+                <StackPanel VerticalAlignment="Center">
+                  <md:PackIcon Kind="CheckCircle"
                                              Height="24"
                                              Width="24"
                                              HorizontalAlignment="Center"
                                              Foreground="{StaticResource PrimaryHueDarkBrush}" />
-                                    <TextBlock Text="Accept" FontSize="6pt" />
-                                </StackPanel>
-                            </Button>
-                            <Button Padding="5 0"
+                  <TextBlock Text="Accept" FontSize="6pt" />
+                </StackPanel>
+              </Button>
+              <Button Padding="5 0"
                                     Click="CloseScheduleClicked"
                                     Style="{StaticResource MaterialDesignToolButton}">
-                                <StackPanel VerticalAlignment="Center">
-                                    <md:PackIcon Kind="CloseCircle" Height="24"
+                <StackPanel VerticalAlignment="Center">
+                  <md:PackIcon Kind="CloseCircle" Height="24"
                                              Width="24"
                                              HorizontalAlignment="Center"
                                              Foreground="{StaticResource SecondaryAccentBrush}" />
-                                    <TextBlock Text="Closed" FontSize="6pt" />
-                                </StackPanel>
-                            </Button>
-                            <Button Style="{StaticResource MaterialDesignToolButton}" Padding="5 0"
+                  <TextBlock Text="Closed" FontSize="6pt" />
+                </StackPanel>
+              </Button>
+              <Button Style="{StaticResource MaterialDesignToolButton}" Padding="5 0"
                                     Click="ConflictScheduleClicked">
-                                <StackPanel VerticalAlignment="Center">
-                                    <md:PackIcon Kind="AlertCircle" Height="24"
+                <StackPanel VerticalAlignment="Center">
+                  <md:PackIcon Kind="AlertCircle" Height="24"
                                              Width="24"
                                              HorizontalAlignment="Center" />
-                                    <TextBlock Text="Conflict" FontSize="6pt" />
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
+                  <TextBlock Text="Conflict" FontSize="6pt" />
+                </StackPanel>
+              </Button>
+            </StackPanel>
 
-                        <Button Click="SubmitButton_OnClick"
+            <Button Click="SubmitButton_OnClick"
                                 x:Name="SubmitButton"
                                 Grid.Column="1"
                                 Content="SUBMIT"
                                 VerticalAlignment="Center" />
-                    </Grid>
-                </md:Transitioner>
+          </Grid>
 
-            </Grid>
+          <!-- Message -->
+          <Grid VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+              <md:PackIcon Kind="Alert" Height="24" Width="24" Margin="10 0" VerticalAlignment="Center"/>
+            <TextBlock Text="" x:Name="Message" TextWrapping="Wrap" FontSize="11pt" VerticalAlignment="Center"
+                       Grid.Column="1"/>
+          </Grid>
+          
+          <!-- Enrollment -->
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="CANCEL" Style="{StaticResource MaterialDesignFlatButton}"
+                    Click="CancelEnrollment_Click"
+                    Margin="10"/>
+            <Button Grid.Column="2" Content="SUBMIT"
+                    Command="{Binding Source={x:Static vm:EnrollmentViewModel.Instance},Path=EnrollCommand}"
+                    Margin="10"/>
+          </Grid>
+          
+        </md:Transitioner>
+
+      </Grid>
         </md:ColorZone>
 
-        <Border Visibility="Hidden"
-                  x:Name="Genie"
-                    Grid.Row="0"
-                
-                  Margin="0 0 0 0">
-            <Grid >
-                <Grid x:Name="LoginView">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Border CornerRadius="4 4 0 0"
+    <md:Transitioner Grid.Row="0" x:Name="Content" SelectedIndex="0">
+      <md:Transitioner.ItemContainerStyle>
+        <Style TargetType="{x:Type md:TransitionerSlide}">
+          <Setter Property="BackwardWipe">
+            <Setter.Value>
+              <md:SlideOutWipe/>
+            </Setter.Value>
+          </Setter>
+          <Setter Property="ForwardWipe">
+            <Setter.Value>
+              <md:SlideOutWipe/>
+            </Setter.Value>
+          </Setter>
+        </Style>
+      </md:Transitioner.ItemContainerStyle>
+      <!-- LOGIN VIEW -->
+      <Border   x:Name="Genie"
+                Grid.Row="0"
+                VerticalAlignment="Bottom"
+                Margin="0 0 0 0">
+        <Grid >
+          <Grid x:Name="LoginView">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Border CornerRadius="4 4 0 0"
                                 Background="{StaticResource PrimaryHueDarkBrush}">
-                        <StackPanel VerticalAlignment="Top"
-                                    Orientation="Horizontal"
-                                    HorizontalAlignment="Left">
-                            <Image Source="norsu_74.png"
-                                   Margin="7"
-                                   Height="48" Width="48"/>
-                            <TextBlock Text="Please Login" 
-                                           Foreground="White"
-                                           VerticalAlignment="Center"
-                                           Margin="20 0 0 0"
-                                           TextAlignment="Center"
-                                           Style="{StaticResource MaterialDesignTitleTextBlock}"/>
-                        </StackPanel>
-                    </Border>
-                    <StackPanel Background="White"
+              <StackPanel VerticalAlignment="Top"
+                          Orientation="Horizontal"
+                          HorizontalAlignment="Left">
+                <Image Source="norsu_74.png"
+                        Margin="7"
+                        Height="48" Width="48"/>
+                <TextBlock Text="Please Login" 
+                            Foreground="White"
+                            VerticalAlignment="Center"
+                            Margin="10 0 0 0"
+                            TextAlignment="Center"
+                            Style="{StaticResource MaterialDesignTitleTextBlock}"/>
+              </StackPanel>
+            </Border>
+            <StackPanel Background="White"
                                     Grid.Row="1">
-                        <ProgressBar x:Name="LoginProgress"
+              <ProgressBar x:Name="LoginProgress"
                                      IsIndeterminate="False"/>
-                        <TextBox Margin="20 47 20 10"
+              <TextBox Margin="20"
                                      x:Name="Username"
                                      TextChanged="Username_OnTextChanged"
                                      md:HintAssist.Hint="USERNAME"/>
-                        <PasswordBox
+              <PasswordBox
                                 PasswordChanged="Password_OnPasswordChanged"
                                 Margin="20"
                                 x:Name="Password"
                                 md:HintAssist.Hint="PASSWORD" />
-                    </StackPanel>
-                </Grid>
-            </Grid>
-        </Border>
+            </StackPanel>
+          </Grid>
+        </Grid>
+      </Border>
 
-        <md:ColorZone Visibility="Hidden"
+      <!-- ENCODER INFO VIEW -->
+      <md:ColorZone 
                 VerticalAlignment="Bottom"
                 x:Name="EncoderGenie"
                 Grid.Row="0"
                 CornerRadius="4 4 0 0"
                 Mode="PrimaryDark"
                 Margin="0 0 0 0">
-            <Grid >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <StackPanel Orientation="Horizontal">
-                    <Border Height="48" Width="48"
+        <Grid >
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>
+          <StackPanel Orientation="Horizontal">
+            <Border Height="48" Width="48"
                     Margin="20 10 10 10">
-                        <Border.OpacityMask>
-                            <VisualBrush>
-                                <VisualBrush.Visual>
-                                    <Ellipse Height="7" Width="7" Fill="Red"/>
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                        </Border.OpacityMask>
-                        <Image Source="{Binding Encoder.Picture,Converter={converters:BytesToImage}}"
+              <Border.OpacityMask>
+                <VisualBrush>
+                  <VisualBrush.Visual>
+                    <Ellipse Height="7" Width="7" Fill="Red"/>
+                  </VisualBrush.Visual>
+                </VisualBrush>
+              </Border.OpacityMask>
+              <Image Source="{Binding Encoder.Picture,Converter={converters:BytesToImage}}"
                    Height="48" Width="48"
                    Stretch="UniformToFill"/>
-                    </Border>
-                    <StackPanel VerticalAlignment="Center"
+            </Border>
+            <StackPanel VerticalAlignment="Center"
                             Margin="10">
-                        <TextBlock Text="{Binding Encoder.Username}" Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+              <TextBlock Text="{Binding Encoder.Username}" Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                                />
-                        <TextBlock Text="{Binding Encoder.FullName}" Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+              <TextBlock Text="{Binding Encoder.FullName}" Style="{StaticResource MaterialDesignSubheadingTextBlock}"
                                />
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Grid.Row="1" Margin="5">
-                    <md:ColorZone Margin="5" ToolTip="Number of students processed.">
-                        <StackPanel Orientation="Horizontal">
-                            <md:PackIcon Kind="AccountMultipleOutline"
+            </StackPanel>
+          </StackPanel>
+          <StackPanel Grid.Row="1" Margin="5">
+            <md:ColorZone Margin="5" ToolTip="Number of students processed.">
+              <StackPanel Orientation="Horizontal">
+                <md:PackIcon Kind="AccountMultipleOutline"
                                      VerticalAlignment="Center"
                                          HorizontalAlignment="Center"
                                      Height="32" Width="32"
                                      Margin="5" />
-                            <Rectangle Width="1" Fill="{StaticResource MaterialDesignDivider}"/>
-                            <TextBlock Text="100" FontSize="20pt" HorizontalAlignment="Right"
+                <Rectangle Width="1" Fill="{StaticResource MaterialDesignDivider}"/>
+                <TextBlock Text="{Binding Encoder.WorkCount,StringFormat={}#\,##0}" FontSize="20pt" HorizontalAlignment="Right"
                                    VerticalAlignment="Center"
                                        Margin="10 0"
                                FontWeight="Bold"/>
 
-                        </StackPanel>
-                    </md:ColorZone>
-                    <md:ColorZone Margin="5" ToolTip="Rate of encoding. Students per hour." >
-                        <StackPanel Orientation="Horizontal">
-                            <md:PackIcon Kind="Speedometer"
+              </StackPanel>
+            </md:ColorZone>
+            <md:ColorZone Margin="5" ToolTip="Rate of encoding. Students per hour." >
+              <StackPanel Orientation="Horizontal">
+                <md:PackIcon Kind="Speedometer"
                                      Height="32" Width="32"
                                          HorizontalAlignment="Center"
                                      VerticalAlignment="Center"
                                      Margin="5"/>
-                            <Rectangle Width="1" Fill="{StaticResource MaterialDesignDivider}" />
-                            <TextBlock Text="100/HR" FontSize="20pt" HorizontalAlignment="Right"
+                <Rectangle Width="1" Fill="{StaticResource MaterialDesignDivider}" />
+                <TextBlock FontSize="20pt" HorizontalAlignment="Right"
                                        Margin="10 0"
                                        VerticalAlignment="Center"
-                               FontWeight="Bold"/>
+                               FontWeight="Bold">
+                                <Run Text="{Binding Encoder.Rate,StringFormat={}#\,##0.##}"/><Run Text="/HR"/>
+                </TextBlock>
 
-                        </StackPanel>
-                    </md:ColorZone>
-                </StackPanel>
+              </StackPanel>
+            </md:ColorZone>
+          </StackPanel>
 
-            </Grid>
-        </md:ColorZone>
+        </Grid>
+      </md:ColorZone>
 
-        <Border Visibility="Hidden"
-                  x:Name="WorkGenie"
+      <!-- WORK VIEW -->
+      <Border x:Name="WorkGenie"
                     Grid.Row="0"
                 Background="White"
                 BorderThickness="0 0 0 1"
@@ -352,65 +446,65 @@
                 CornerRadius="4 4 0 0"
                   Margin="0 0 0 0">
 
-            <Grid >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Border CornerRadius="4 4 0 0"
+        <Grid >
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+          <Border CornerRadius="4 4 0 0"
                                 Background="{StaticResource PrimaryHueDarkBrush}">
-                    <StackPanel VerticalAlignment="Top"
+            <StackPanel VerticalAlignment="Top"
                                     Orientation="Horizontal"
                                     HorizontalAlignment="Left">
-                        <Image Source="norsu_74.png"
+              <Image Source="norsu_74.png"
                                    Margin="7"
                                    Height="48" Width="48"/>
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="STUDENT ID" 
+              <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="STUDENT ID" 
                                        x:Name="StudentId"
                                            Foreground="White"
                                            Style="{StaticResource MaterialDesignTitleTextBlock}"/>
-                            <TextBlock Text="Student Name"
+                <TextBlock Text="Student Name"
                                        x:Name="StudentName"
                                        Style="{StaticResource MaterialDesignSubheadingTextBlock}"
                                        Foreground="White"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
+              </StackPanel>
+            </StackPanel>
+          </Border>
 
-                <ListBox Grid.Row="1" Grid.IsSharedSizeScope="True"
+          <ListBox Grid.Row="1" Grid.IsSharedSizeScope="True"
                          SelectionMode="Extended"
                          HorizontalContentAlignment="Stretch"
                           x:Name="WorkDataGrid">
-                    <ListBox.ItemContainerStyle>
-                        <Style BasedOn="{StaticResource MaterialDesignListBoxItem}"
+            <ListBox.ItemContainerStyle>
+              <Style BasedOn="{StaticResource MaterialDesignListBoxItem}"
                                TargetType="ListBoxItem">
-                            <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}"/>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid HorizontalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <CheckBox IsChecked="{Binding IsSelected}"
+                <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}"/>
+              </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Grid HorizontalAlignment="Stretch">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                  </Grid.ColumnDefinitions>
+                  <CheckBox IsChecked="{Binding IsSelected}"
                                           VerticalAlignment="Center"
                                           Margin="5"/>
-                                <TextBlock Grid.Column="1"
+                  <TextBlock Grid.Column="1"
                                            VerticalAlignment="Center"
                                            Margin="5">
                                     <Run FontWeight="Bold" Text="{Binding SubjectCode}" />
                                     [ <Run Text="{Binding Schedule}" /> ]
-                                </TextBlock>
-                                <Button Grid.Column="2"
+                  </TextBlock>
+                  <Button Grid.Column="2"
                                         Padding="0"
                                         Style="{StaticResource MaterialDesignToolButton}"
                                         Command="{Binding ToggleStatusCommand}">
-                                    <md:PackIcon Height="24"
+                    <md:PackIcon Height="24"
                                              Width="24"
                                              Margin="5 0"
                                              Foreground="{Binding EnrollmentStatus, Converter={converters:ScheduleStatusToBrushConverter
@@ -418,12 +512,12 @@
                                                 {StaticResource SecondaryAccentBrush}, 
                                                 {StaticResource MaterialDesignLightForeground}}}"
                                              Kind="{Binding EnrollmentStatus, Converter={converters:ScheduleStatusConverter}}" />
-                                </Button>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <ProgressBar x:Name="SubmitProgress" Grid.Row="1"
+                  </Button>
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <ProgressBar x:Name="SubmitProgress" Grid.Row="1"
                              VerticalAlignment="Center"
                              HorizontalAlignment="Center"
                              IsIndeterminate="True"
@@ -431,7 +525,118 @@
                              Height="64"
                              Width="64"
                              Style="{StaticResource MaterialDesignCircularProgressBar}"/>
+        </Grid>
+      </Border>
+      
+      <Grid/>
+
+      <!--ENROLLMENT-->
+      
+        <Grid DataContext="{Binding Source={x:Static vm:EnrollmentViewModel.Instance}}">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="*" />
+              <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border CornerRadius="4 4 0 0"
+                    Background="{StaticResource PrimaryHueDarkBrush}">
+              <Grid VerticalAlignment="Top"
+                          HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="norsu_74.png"
+                       Margin="7"
+                       Height="48" Width="48" />
+                <TextBlock Text="Enroll Student"
+                           Grid.Column="1"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           Margin="10 0 0 0"
+                           TextAlignment="Center"
+                           Style="{StaticResource MaterialDesignTitleTextBlock}" />
+              </Grid>
+            </Border>
+          <ScrollViewer Background="White"
+                        IsEnabled="{Binding IsProcessing,Converter={converters:Inverter}}"
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto"
+                          Grid.Row="1">
+            <StackPanel Background="White" Margin="20"
+                        DataContext="{Binding Student}"
+                        Grid.Row="1">
+              <TextBox md:HintAssist.Hint="STUDENT ID" 
+                       Text="{Binding StudentId,UpdateSourceTrigger=PropertyChanged}"
+                       md:HintAssist.IsFloating="True"/>
+            <TextBox md:HintAssist.Hint="FIRST NAME"
+                     Text="{Binding FirstName,UpdateSourceTrigger=PropertyChanged}"
+                     md:HintAssist.IsFloating="True" />
+              <TextBox md:HintAssist.Hint="LAST NAME"
+                       Text="{Binding LastName,UpdateSourceTrigger=PropertyChanged}"
+                       md:HintAssist.IsFloating="True" />
+              <DatePicker Margin="0 15 0 0"
+                          DisplayDateStart="{Binding Source={x:Static vm:EnrollmentViewModel.MinDate},Mode=OneWay}"
+                          DisplayDateEnd="{Binding Source={x:Static system:DateTime.Now},Mode=OneWay}"
+                          SelectedDate="{Binding BirthDate,UpdateSourceTrigger=PropertyChanged}"
+                          md:HintAssist.IsFloating="True" >
+                <md:HintAssist.Hint>
+                  <TextBlock>
+                    <Run Text="Date of Birth (AGE: "/><Run Text="{Binding BirthDate,Converter={converters:BirthToAge}}"/><Run Text=")"/>
+                  </TextBlock>
+                </md:HintAssist.Hint>
+              </DatePicker>
+              <ComboBox md:HintAssist.Hint="GENDER"
+                        md:HintAssist.IsFloating="True" >
+                <ComboBoxItem Content="Male" IsSelected="{Binding Male}"/>
+                <ComboBoxItem Content="Female" IsSelected="{Binding Male,Converter={converters:Inverter}}"/>
+              </ComboBox>
+              <TextBox md:HintAssist.Hint="ADDRESS"
+                       Text="{Binding Address,UpdateSourceTrigger=PropertyChanged}"
+                       md:HintAssist.IsFloating="True" />
+              <ComboBox ItemsSource="{Binding Source={x:Static vm:EnrollmentViewModel.Instance},Path=Courses}"
+                        md:HintAssist.Hint="COURSE"
+                        md:HintAssist.IsFloating="True"
+                        DisplayMemberPath="Fullname"
+                        SelectedValuePath="Id" SelectedValue="{Binding CourseId}"/>
+              <TextBox md:HintAssist.Hint="MAJOR"
+                       Text="{Binding Major,UpdateSourceTrigger=PropertyChanged}"
+                       md:HintAssist.IsFloating="True" />
+              <TextBox md:HintAssist.Hint="MINOR"
+                       Text="{Binding Minor,UpdateSourceTrigger=PropertyChanged}"
+                       md:HintAssist.IsFloating="True" />
+              <TextBox md:HintAssist.Hint="SCHOLARSHIP"
+                       Text="{Binding Scholarship,UpdateSourceTrigger=PropertyChanged}"
+                       md:HintAssist.IsFloating="True" />
+              
+          </StackPanel>
+          </ScrollViewer>
+            <Grid Grid.Row="1"
+                  Visibility="{Binding IsProcessing,Converter={converters:BooleanToVisibility}}">
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center"
+                  Visibility="{Binding EnrollmentSuccess,Converter={converters:BooleanToVisibility Collapsed,Visible}}">
+              <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Height="147" Width="147"
+                           Visibility="{Binding EnrollmentError,Converter={converters:BooleanToVisibility Collapsed,Visible}}"
+                           IsIndeterminate="True"/>
             </Grid>
-        </Border>
+              <md:PackIcon Kind="CheckCircle" Height="147" Width="147" Foreground="{StaticResource PrimaryHueDarkBrush}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Visibility="{Binding EnrollmentSuccess,Converter={converters:BooleanToVisibility}}"/>
+            <StackPanel Background="#77ffffff"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Visibility="{Binding EnrollmentError,Converter={converters:BooleanToVisibility}}">
+              <md:PackIcon Kind="CloseCircle" Height="147" Width="147"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Foreground="{StaticResource ValidationErrorBrush}"/>
+              <TextBlock Text="{Binding Status}" TextAlignment="Center" TextWrapping="Wrap"
+                         FontSize="11pt"/>
+            </StackPanel>
+          </Grid>
+        </Grid>
+        </Grid>
+    </md:Transitioner>
+      
+     
     </Grid>
 </Window>

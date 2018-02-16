@@ -14,5 +14,10 @@ namespace NORSU.EncodeMe.Network
         [ProtoMember(3)]
         public byte[] Picture { get; set; }
         
+        [ProtoMember(4)]
+        public double Rate { get; set; }
+        
+        [ProtoMember(5)]
+        public long WorkCount { get; set; }
     }
 }

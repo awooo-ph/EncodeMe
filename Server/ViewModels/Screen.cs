@@ -29,7 +29,7 @@ namespace NORSU.EncodeMe.ViewModels
                 OnPropertyChanged(nameof(IsDialogOpen));
             }
         }
-
+        
         private bool _IsRightDrawerOpen;
 
         public bool IsRightDrawerOpen
@@ -56,9 +56,9 @@ namespace NORSU.EncodeMe.ViewModels
             }
         }
 
-        private int? _Badge;
+        private string _Badge;
 
-        public int? Badge
+        public string Badge
         {
             get => _Badge;
             set
@@ -66,6 +66,20 @@ namespace NORSU.EncodeMe.ViewModels
                 if (value == _Badge) return;
                 _Badge = value;
                 OnPropertyChanged(nameof(Badge));
+            }
+        }
+
+        private string _ShortName;
+
+        public string ShortName
+        {
+            get => _ShortName;
+            set
+            {
+                if(value == _ShortName)
+                    return;
+                _ShortName = value;
+                OnPropertyChanged(nameof(ShortName));
             }
         }
 
@@ -143,7 +157,7 @@ namespace NORSU.EncodeMe.ViewModels
                 OnPropertyChanged(nameof(Icon));
             }
         }
-
+        
         //private UserControl _content;
 
         //public UserControl Content

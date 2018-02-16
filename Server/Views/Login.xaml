@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="NORSU.EncodeMe.Views.Login"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NORSU.EncodeMe.Views"
+             mc:Ignorable="d" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             VerticalAlignment="Stretch"
+             HorizontalAlignment="Stretch"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Background="{StaticResource MaterialDesignDarkBackground}">
+    <md:Card HorizontalAlignment="Center" VerticalAlignment="Center" Width="555"
+             UniformCornerRadius="7">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Image Source="pack://application:,,,/norsu.png"
+               Grid.RowSpan="3"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center"
+                Margin="20"
+               Height="147" Width="147" RenderOptions.BitmapScalingMode="HighQuality"/>
+        
+        
+          
+          <TextBlock Text="Please Login" Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                     Grid.Row="0" 
+                     Grid.Column="1"
+                     Margin="20"
+                     VerticalAlignment="Center"/>
+        <TextBox Text="{Binding LoginUsername,UpdateSourceTrigger=PropertyChanged}"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   FontSize="15pt" Margin="20 0 47 10" >
+          <md:HintAssist.Hint>
+            <TextBlock>
+              <md:PackIcon Kind="Account"/> <Run Text="USERNAME"/>
+            </TextBlock>
+          </md:HintAssist.Hint>
+        </TextBox>
+        <PasswordBox x:Name="PasswordBox" 
+                       Grid.Row="2"
+                       Grid.Column="1"
+                       FontSize="15pt" Margin="20 10 47 10" >
+          <md:HintAssist.Hint>
+            <TextBlock>
+              <md:PackIcon Kind="Key" /> <Run Text="PASSWORD" />
+            </TextBlock>
+          </md:HintAssist.Hint>
+        </PasswordBox>
+
+          <Grid Margin="0 20 0 0"
+                Grid.Row="3"
+                Grid.ColumnSpan="2"
+                Grid.Column="0">
+            <Button Margin="20"
+                    HorizontalAlignment="Center"
+                    Content="Login"
+                    IsDefault="True"
+                    Command="{Binding LoginCommand}"
+                    CommandParameter="{Binding ElementName=PasswordBox}" />
+          </Grid>
+        
+        
+      </Grid>
+    </md:Card>
+    </Grid>
+</UserControl>

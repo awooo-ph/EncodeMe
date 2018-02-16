@@ -14,6 +14,7 @@ namespace NORSU.EncodeMe.ViewModels
     {
         private Terminals() : base("Encoding Stations", PackIconKind.MonitorMultiple)
         {
+            ShortName = "Stations";
         }
 
         private static Terminals _instance;

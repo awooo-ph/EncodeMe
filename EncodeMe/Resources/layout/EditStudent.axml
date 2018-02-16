@@ -69,16 +69,22 @@
                 android:textSize="12pt"
                 android:textAllCaps="true"
                 android:layout_margin="10dp" />
-            <EditText
+          
+          <TextView android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="COURSE"
+                    android:layout_marginLeft="20dp"
+                    android:textSize="10pt"
+                    android:layout_marginTop="20dp"/>
+          
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
                 android:id="@+id/Course"
                 android:hint="Course"
                 android:padding="10dp"
-                android:textSize="12pt"
-                android:textAllCaps="true"
                 android:layout_margin="10dp" />
+            
         </LinearLayout>
     </ScrollView>
   <Button

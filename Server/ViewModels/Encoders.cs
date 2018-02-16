@@ -16,8 +16,9 @@ namespace NORSU.EncodeMe.ViewModels
 {
     class Encoders : Screen
     {
-        private Encoders() : base("Encoders", PackIconKind.AccountMultiple)
+        private Encoders() : base("Enrollment Encoders", PackIconKind.Keyboard)
         {
+            ShortName = "Encoders";
             Commands.Add(new ScreenMenu("ADD NEW", PackIconKind.AccountPlus, AddNewCommand));
             Commands.Add(new ScreenMenu("DELETE ALL", PackIconKind.AccountMultipleMinus, DeleteAllCommand));
 

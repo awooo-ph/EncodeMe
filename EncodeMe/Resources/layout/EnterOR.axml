@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:minWidth="25px"
+    android:minHeight="25px">
+  <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="100"
+      android:layout_marginTop="47dp">
+    <TextView
+        android:text="ENROLLMENT"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView1"
+        android:textSize="20pt"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="#fc0099cc" />
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Progress"
+        android:indeterminate="false"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateTint="#ff33b5e5"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp" />
+    <TextView
+        android:text="Please enter OR number"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:id="@+id/OrNumber"
+        android:hint="OR NUMBER"
+        android:padding="10dp"
+        android:textSize="17pt"
+        android:textAllCaps="true"
+        android:layout_margin="30dp"
+        android:gravity="center" />
+  
+  </LinearLayout>
+  <Button
+      android:text="SUBMIT"
+      android:id="@+id/SubmitButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="20dp" />
+</LinearLayout>

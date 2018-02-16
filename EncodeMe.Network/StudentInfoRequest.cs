@@ -7,5 +7,7 @@ namespace NORSU.EncodeMe.Network
     {   
         [ProtoMember(1)]
         public string StudentId { get; set; }
+        [ProtoMember(2)]
+        public string Password { get; set; }
     }
 }

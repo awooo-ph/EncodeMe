@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,35 +19,35 @@ namespace NORSU.EncodeMe
     /// </summary>
     public partial class Requests : Window
     {
-        private Magic _loginMagic, _encoderMagic, _workMagic;
+       // private Magic _loginMagic, _encoderMagic, _workMagic;
         
         public Requests()
         {
             InitializeComponent();
 
-            _loginMagic = new Magic(LoginLamp, Genie, true);
-            _loginMagic.Duration = new Duration(TimeSpan.FromMilliseconds(200));
-            _loginMagic.Collapsed += MagicCollapsed;
+          //  _loginMagic = new Magic(LoginLamp, Genie, false);
+          //  _loginMagic.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+          //  _loginMagic.Collapsed += MagicCollapsed;
 
-            _loginMagic.Expanding += GenieExpanding;
+          //  _loginMagic.Expanding += GenieExpanding;
 
-            _loginMagic.Expanded += (sender, args) =>
-            {
-                MainTransitioner.SelectedIndex = 1;
-            };
+          //  _loginMagic.Expanded += (sender, args) =>
+          //  {
+          //      MainTransitioner.SelectedIndex = 1;
+         //   };
             
-            _loginMagic.IsGenieOut = false;
+          //  _loginMagic.IsGenieOut = false;
 
 
-            _encoderMagic = new Magic(LoginLamp, EncoderGenie, true);
-            _encoderMagic.Duration = new Duration(TimeSpan.FromMilliseconds(200));
-            _encoderMagic.Expanding += GenieExpanding;
-            _encoderMagic.Collapsed += MagicCollapsed;
+          //  _encoderMagic = new Magic(LoginLamp, EncoderGenie, true);
+         //   _encoderMagic.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+          //  _encoderMagic.Expanding += GenieExpanding;
+          //  _encoderMagic.Collapsed += MagicCollapsed;
 
-            _workMagic = new Magic(NextButton, WorkGenie, true);
-            _workMagic.Duration = new Duration(TimeSpan.FromMilliseconds(200));
-            _workMagic.Collapsed += MagicCollapsed;
-            _workMagic.Expanding += GenieExpanding;
+          //  _workMagic = new Magic(NextButton, WorkGenie, true);
+          //  _workMagic.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+          //  _workMagic.Collapsed += MagicCollapsed;
+          //  _workMagic.Expanding += GenieExpanding;
         }
 
         private void MagicCollapsed(object o, EventArgs eventArgs)
@@ -79,9 +80,16 @@ namespace NORSU.EncodeMe
         private bool workFetched;
         private async void Button_OnClick(object sender, RoutedEventArgs e)
         {
-            if (MainViewModel.Instance.Encoder == null)
+            if (CurrentWork?.Result == ResultCodes.Success)
             {
-                _loginMagic.IsGenieOut = true;
+                MainTransitioner.SelectedIndex = 3;
+                Content.SelectedIndex = 2;
+                return;
+            }
+            
+            var NextButton = (Button) sender;
+            if (MainViewModel.Instance.Encoder == null)
+            {     
                 MainTransitioner.SelectedIndex = 1;
                 PeerDiscovery.DiscoverPeersAsync(PeerDiscovery.DiscoveryMethod.UDPBroadcast);
                 return;
@@ -95,30 +103,37 @@ namespace NORSU.EncodeMe
             CurrentWork = work;
             ButtonProgressAssist.SetIsIndicatorVisible(NextButton, false);
             ButtonProgressAssist.SetIsIndeterminate(NextButton, false);
-            
+
+            //_encoderMagic.IsGenieOut = false;
+            var errorMessage = "";
             switch (work.Result)
             {
                 case ResultCodes.Success:
                     WorkDataGrid.ItemsSource = work.ClassSchedules;
-                    _workMagic.IsGenieOut = true;
+                    //_workMagic.IsGenieOut = true;
                     MainTransitioner.SelectedIndex = 3;
                     LoginLamp.Visibility = Visibility.Collapsed;
                     StudentId.Text = work.StudentId;
                     StudentName.Text = work.StudentName;
                     break;
                 case ResultCodes.NotFound:
-                    MessageBox.Show("No more pending items.");
-                    return;
+                    //MessageBox.Show("No more pending items.");
+                    errorMessage = "No more requests";
+                    break;
                 case ResultCodes.Offline:
-                    MessageBox.Show("You are not connected to server.","Server Offline", MessageBoxButton.OK, MessageBoxImage.Error);
+                    errorMessage = "Can not find server";
                     break;
                 case ResultCodes.Timeout:
-                    MessageBox.Show("You are not connected to server.","Request Timeout", MessageBoxButton.OK, MessageBoxImage.Error);
+                    errorMessage = "Request timeout";
                     break;
                 case ResultCodes.Error:
-                    MessageBox.Show("An error occured while trying to fetch next item.","Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    errorMessage = "Request timeout";
                     break;
             }
+
+            
+            await ShowMessage(errorMessage);
+            
             
             workFetched = false;           
         }
@@ -126,7 +141,7 @@ namespace NORSU.EncodeMe
 
         private void ExitClicked(object sender, RoutedEventArgs e)
         {
-            _loginMagic.IsGenieOut = false;
+            //_loginMagic.IsGenieOut = false;
             MainTransitioner.SelectedIndex = 0;
             EnableLogin();
             Username.Text = "";
@@ -135,20 +150,16 @@ namespace NORSU.EncodeMe
 
         private void EncoderPictureClicked(object sender, MouseButtonEventArgs e)
         {
-            _workMagic.IsGenieOut = false;
-           
             if (MainViewModel.Instance.Encoder == null)
             {
-                _loginMagic.IsGenieOut = !_loginMagic.IsGenieOut;
-                MainTransitioner.SelectedIndex = _loginMagic.IsGenieOut ? 1 : 0;
+                MainTransitioner.SelectedIndex = 0;
+                Content.SelectedIndex = 0;
                 EnableLogin();
-                Username.Text = "";
-                Password.Password = "";
             }
             else
             {
-                _encoderMagic.IsGenieOut = !_encoderMagic.IsGenieOut;
-                MainTransitioner.SelectedIndex = _encoderMagic.IsGenieOut ? 2 : 0;
+                MainTransitioner.SelectedIndex = 1;
+                Content.SelectedIndex = 2;
             }
         }
 
@@ -172,18 +183,29 @@ namespace NORSU.EncodeMe
             if (result.Result == ResultCodes.Success)
             {
                 MainViewModel.Instance.Encoder = result.Encoder;
-                _loginMagic.IsGenieOut = false;
-                MainTransitioner.SelectedIndex = 0;
-                _encoderMagic.IsGenieOut = true;
+                MainTransitioner.SelectedIndex = 2;
+                Content.SelectedIndex = 1;
+                Username.Text = "";
+                Password.Password = "";
             }
             else
             {
-                MessageBox.Show(result.Message, "Login Failed", MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+               await ShowMessage("Login Failed");
             }
 
             LoginProgress.IsIndeterminate = false;
             EnableLogin();
+        }
+
+        private async Task ShowMessage(string message)
+        {
+            if (message == "") return;
+            
+            Message.Text = message;
+            var index = MainTransitioner.SelectedIndex;
+            MainTransitioner.SelectedIndex = 4;
+            await TaskEx.Delay(2222);
+            MainTransitioner.SelectedIndex = index;
         }
 
         private void Password_OnPasswordChanged(object sender, RoutedEventArgs e)
@@ -203,13 +225,13 @@ namespace NORSU.EncodeMe
         private void CalculateLoginProgress()
         {
             var usernameProgress = 0.0;
-            if (Username.Text.Length >= 7)
+            if (Username.Text.Length >= 4)
                 usernameProgress = 50;
             else
                 usernameProgress = (Username.Text.Length / 7.0) * 50;
 
             var pwdProgress = 0.0;
-            if (Password.Password.Length >= 7)
+            if (Password.Password.Length >= 4)
                 pwdProgress = 50;
             else
                 pwdProgress = (Password.Password.Length / 7.0) * 50;
@@ -221,9 +243,11 @@ namespace NORSU.EncodeMe
 
         private void LogoutButton_OnClick(object sender, RoutedEventArgs e)
         {
+            Client.Logout();
             MainViewModel.Instance.Encoder = null;
-            _encoderMagic.IsGenieOut = false;
-            MainTransitioner.SelectedIndex = 0;
+          //  _encoderMagic.IsGenieOut = false;
+            MainTransitioner.SelectedIndex = 1;
+            Content.SelectedIndex = 0;
         }
 
         private void AcceptSelected(object sender, RoutedEventArgs e)
@@ -278,12 +302,29 @@ namespace NORSU.EncodeMe
 
             if (result.Result == ResultCodes.Success)
             {
-                _workMagic.IsGenieOut = false;
+               // _workMagic.IsGenieOut = false;
+                MainTransitioner.SelectedIndex = 0;
+                LoginLamp.Visibility = Visibility.Visible;
+            } else if (result.Result == ResultCodes.Denied)
+            {
+                EncoderPictureClicked(null, null);
             }
             else
             {
                 MessageBox.Show("An error occured while contacting server. Please try again.");
             }
+        }
+
+        private void Enroll_Click(object sender, RoutedEventArgs e)
+        {
+            MainTransitioner.SelectedIndex = 5;
+            Content.SelectedIndex = 4;
+        }
+
+        private void CancelEnrollment_Click(object sender, RoutedEventArgs e)
+        {
+            MainTransitioner.SelectedIndex = 2;
+            Content.SelectedIndex = 1;
         }
     }
 }
